@@ -19,7 +19,7 @@ module WordLadder
     end
 
     def run
-      return [] if @initial_word.key == @end
+      return [] if @initial_word.key == @end || @initial_word.key.length != @end.length
       todos = wles(@initial_word)
       process_words(todos, Lookup.new([@initial_word.key]))
     end
@@ -27,6 +27,8 @@ module WordLadder
     private
 
     def process_words(todos, visited)
+      return [] if todos.empty?
+
       try = todos.find { |todo| @end == todo.word.key }
 
       if try

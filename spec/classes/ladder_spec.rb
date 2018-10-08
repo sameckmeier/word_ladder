@@ -28,6 +28,8 @@ describe WordLadder::Ladder do
   describe :run do
     context "valid words" do
       it { expect(WordLadder::Ladder.run("fan", "fan")).to eq [] }
+      it { expect(WordLadder::Ladder.run("fan", "fanny")).to eq [] }
+      it { expect(WordLadder::Ladder.run("animal", "little")).to eq [] }
       it { expect(WordLadder::Ladder.run("fan", "pan")).to eq ["fan", "pan"] }
       it { expect(WordLadder::Ladder.run("code", "data")).to eq ["code", "cade", "cate", "date", "data"] }
     end
