@@ -1,6 +1,6 @@
 module WordLadder
   class Ladder
-    Wle = Struct.new(:word, :path)
+    Node = Struct.new(:key, :word, :path)
 
     class << self
       def run(a, b)
@@ -12,52 +12,40 @@ module WordLadder
 
     def initialize(a, b)
       dictionary = Dictionary.new
-      [a, b].each { |word| dictionary.exists?(word, true) }
+
+      dictionary.exists?(a, true)
+      dictionary.exists?(b, true)
 
       @initial_word = Word.new(a, dictionary)
+      @visited = Lookup.new([@initial_word.key])
       @end = b
     end
 
     def run
-      return [] if @initial_word.key == @end || @initial_word.key.length != @end.length
-      todos = wles(@initial_word)
-      process_words(todos, Lookup.new([@initial_word.key]))
+      return if @initial_word.key.length != @end.length
+      node = Node.new(@initial_word.key, @initial_word, [@initial_word.key])
+      @todos = next_nodes(node)
+      word_path(node)
     end
 
     private
 
-    def process_words(todos, visited)
-      return [] if todos.empty?
+    def word_path(node)
+      while !@todos.empty?
+        return node.path if @end == node.key
 
-      try = todos.find { |todo| @end == todo.word.key }
-
-      if try
-        try.path
-      else
-        process_words(
-          next_todos(todos, visited),
-          visited
-        )
-      end
-    end
-
-    def next_todos(todos, visited)
-      todos.each_with_object([]) do |todo, arr|
-        word = todo.word
-        path = todo.path
-
-        if visited.exists?(word.key)
-          arr
-        else
-          visited.add(word.key)
-          arr.concat(wles(word, path))
+        node = @todos.shift
+        unless @visited.exists?(node.key)
+          @todos.concat(next_nodes(node))
+          @visited.add(node.key)
         end
       end
     end
 
-    def wles(word, path = [])
-      path << word.key if path.length == 0
-      word.next_words.map { |w| Wle.new(w, path + [w.key]) }
+    def next_nodes(node)
+      word = node.word
+      path = node.path
+      word.next_words.map { |w| Node.new(w.key, w, path + [w.key]) }
     end
   end
 end
