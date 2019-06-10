@@ -7,13 +7,12 @@ module WordLadder
       build
     end
 
-    def exists?(word, raise_error = false)
-      exists = @lookup.exists?(word)
+    def exists?(word)
+      @lookup.exists?(word)
+    end
 
-      fail InvalidWordError, "#{word} is not a real word" if
-        raise_error && !exists
-
-      exists
+    def validate_word(word)
+      fail InvalidWordError, "#{word} is not a real word" unless exists?(word)
     end
 
     private

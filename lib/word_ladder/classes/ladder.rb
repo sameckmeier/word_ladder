@@ -13,8 +13,8 @@ module WordLadder
     def initialize(a, b)
       dictionary = Dictionary.new
 
-      dictionary.exists?(a, true)
-      dictionary.exists?(b, true)
+      dictionary.validate_word(a)
+      dictionary.validate_word(b)
 
       @initial_word = Word.new(a, dictionary)
       @visited = Lookup.new([@initial_word.key])

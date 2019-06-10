@@ -6,7 +6,7 @@ module WordLadder
       @key = word.downcase
       @dictionary = dictionary
 
-      dictionary.exists?(word, true)
+      dictionary.validate_word(word)
     end
 
     def next_words
